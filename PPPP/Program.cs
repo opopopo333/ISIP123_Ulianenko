@@ -55,7 +55,6 @@ namespace InventoryApp
                     case "3": SupplyProduct(); break;
                     case "4": SellProduct(); break;
                     case "5": SearchProduct(); break;
-                    case "6": ListAll(); break;
                     case "0": return;
                     default: Console.WriteLine("Ошибка ввода"); break;
                 }
@@ -82,6 +81,28 @@ namespace InventoryApp
             products.Add(new Product(GenCode(), name, price, qty, (Category)c));
             Console.WriteLine("Товар добавлен");
         }
+
+        static void RemoveProduct()
+        {
+            Console.Write("Код: ");
+            string code = Console.ReadLine();
+            var p = products.FirstOrDefault(x => x.Code == code);
+            if (p == null) Console.WriteLine("Не найден");
+            else { products.Remove(p); Console.WriteLine("Удалён"); }
+        }
+
+        static void SupplyProduct()
+        {
+            Console.Write("Код: ");
+            string code = Console.ReadLine();
+            Console.Write("Сколько добавить: ");
+            if (!int.TryParse(Console.ReadLine(), out var amt) || amt <= 0) { Console.WriteLine("Ошибка количества"); return; }
+
+            var p = products.FirstOrDefault(x => x.Code == code);
+            if (p == null) Console.WriteLine("Не найден");
+            else { p.Quantity += amt; Console.WriteLine("Поставка выполнена"); }
+        }
+
 
 
     }
