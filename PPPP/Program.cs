@@ -103,9 +103,36 @@ namespace InventoryApp
             else { p.Quantity += amt; Console.WriteLine("Поставка выполнена"); }
         }
 
+        static void SearchProduct()
+        {
+            Console.Write("Поиск по (1-код,2-имя,3-категория): ");
+            string mode = Console.ReadLine();
+
+            if (mode == "1")
+            {
+                Console.Write("Код: ");
+                string code = Console.ReadLine();
+                var p1 = products.FirstOrDefault(x => x.Code == code);
+                if (p1 == null) Console.WriteLine("Не найден");
+                else Console.WriteLine(p1);
+            }
+            else if (mode == "2")
+            {
+                Console.Write("Имя содержит: ");
+                string q = Console.ReadLine()?.ToLower() ?? "";
+                var res = products.Where(x => x.Name.ToLower().Contains(q));
+                foreach (var p in res) Console.WriteLine(p);
+            }
+            else if (mode == "3")
+            {
+                Console.Write("Категория (1-Эл,2-Продукты,3-Одежда): ");
+                if (!int.TryParse(Console.ReadLine(), out var c) || c < 1 || c > 3) { Console.WriteLine("Ошибка"); return; }
+                foreach (var p in products.Where(x => x.Category == (Category)c)) Console.WriteLine(p);
+            }
 
 
+
+        }
     }
-}
 
 
