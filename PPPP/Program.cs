@@ -63,6 +63,27 @@ namespace InventoryApp
         }
 
         static string GenCode() => "1" + nextId++.ToString("D3");
+
+        static void AddProduct()
+        {
+            Console.Write("Название: ");
+            string name = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(name)) { Console.WriteLine("Ошибка: пустое имя"); return; }
+
+            Console.Write("Цена: ");
+            if (!decimal.TryParse(Console.ReadLine(), out var price) || price < 0) { Console.WriteLine("Ошибка цены"); return; }
+
+            Console.Write("Количество: ");
+            if (!int.TryParse(Console.ReadLine(), out var qty) || qty < 0) { Console.WriteLine("Ошибка количества"); return; }
+
+            Console.Write("Категория (1-Эл,2-Продукты,3-Одежда): ");
+            if (!int.TryParse(Console.ReadLine(), out var c) || c < 1 || c > 3) { Console.WriteLine("Ошибка категории"); return; }
+
+            products.Add(new Product(GenCode(), name, price, qty, (Category)c));
+            Console.WriteLine("Товар добавлен");
+        }
+
+
     }
 }
 
