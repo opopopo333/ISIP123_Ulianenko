@@ -40,7 +40,7 @@ namespace InventoryApp
         static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            LoadTestData();
+
 
             while (true)
             {
@@ -62,10 +62,8 @@ namespace InventoryApp
             }
         }
 
-
-
-
+        static string GenCode() => "1" + nextId++.ToString("D3");
     }
-
 }
+
 
