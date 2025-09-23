@@ -32,6 +32,40 @@ namespace InventoryApp
             $"{Code} | {Name} | {Category} | Цена: {Price:C} | Кол-во: {Quantity} | В наличии: {(InStock ? "Да" : "Нет")}";
     }
 
-    
+    class Program
+    {
+        static List<Product> products = new();
+        static int nextId = 1;
+
+        static void Main()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            LoadTestData();
+
+            while (true)
+            {
+                Console.WriteLine("\n1-Добавить  2-Удалить  3-Поставка  4-Продажа  5-Поиск  6-Все товары  0-Выход");
+                Console.Write("Команда: ");
+                string cmd = Console.ReadLine();
+
+                switch (cmd)
+                {
+                    case "1": AddProduct(); break;
+                    case "2": RemoveProduct(); break;
+                    case "3": SupplyProduct(); break;
+                    case "4": SellProduct(); break;
+                    case "5": SearchProduct(); break;
+                    case "6": ListAll(); break;
+                    case "0": return;
+                    default: Console.WriteLine("Ошибка ввода"); break;
+                }
+            }
+        }
+
+
+
+
+    }
+
 }
 
