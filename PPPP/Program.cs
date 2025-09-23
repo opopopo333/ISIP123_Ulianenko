@@ -129,10 +129,23 @@ namespace InventoryApp
                 if (!int.TryParse(Console.ReadLine(), out var c) || c < 1 || c > 3) { Console.WriteLine("Ошибка"); return; }
                 foreach (var p in products.Where(x => x.Category == (Category)c)) Console.WriteLine(p);
             }
-
-
-
         }
+
+        static void SellProduct()
+        {
+            Console.Write("Код: ");
+            string code = Console.ReadLine();
+            Console.Write("Сколько продать: ");
+            if (!int.TryParse(Console.ReadLine(), out var amt) || amt <= 0) { Console.WriteLine("Ошибка количества"); return; }
+
+            var p = products.FirstOrDefault(x => x.Code == code);
+            if (p == null) Console.WriteLine("Не найден");
+            else if (p.Quantity < amt) Console.WriteLine("Недостаточно товара");
+            else { p.Quantity -= amt; Console.WriteLine("Продано"); }
+        }
+
+
     }
+}
 
 
