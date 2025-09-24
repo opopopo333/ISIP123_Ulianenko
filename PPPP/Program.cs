@@ -8,11 +8,11 @@ namespace InventoryApp
 
     class Product
     {
-        public string Code { get; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
-        public Category Category { get; set; }
+        public string Code ;
+        public string Name ;
+        public decimal Price ;
+        public int Quantity ;
+        public Category Category ;
         public bool InStock => Quantity > 0;
 
         public Product(string code, string name, decimal price, int quantity, Category category)
