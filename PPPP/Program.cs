@@ -94,4 +94,56 @@ class Program
             }
         }
     }
+    static TextStatistics AnalyzeText(string text)
+    {
+        TextStatistics stats = new TextStatistics();
+        stats.OriginalText = text;
+        stats.LetterFrequency = new Dictionary<char, int>();
+
+        string[] words = text.Split(new char[] { ' ', '\t', '\n', ',', '.', '!', '?', ';', ':' },
+                                    StringSplitOptions.RemoveEmptyEntries);
+
+        stats.WordCount = words.Length;
+        stats.ShortestWord = words[0];
+        stats.LongestWord = words[0];
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            string word = words[i];
+            if (word.Length < stats.ShortestWord.Length)
+                stats.ShortestWord = word;
+            if (word.Length > stats.LongestWord.Length)
+                stats.LongestWord = word;
+        }
+
+        stats.SentenceCount = 0;
+        for (int i = 0; i < text.Length; i++)
+        {
+            char ch = text[i];
+            if (ch == '.' || ch == '!' || ch == '?')
+                stats.SentenceCount++;
+        }
+
+        stats.VowelCount = 0;
+        stats.ConsonantCount = 0;
+        for (int i = 0; i < text.Length; i++)
+        {
+            char ch = char.ToLower(text[i]);
+
+            if (Array.IndexOf(vowels, ch) >= 0)
+                stats.VowelCount++;
+            else if (Array.IndexOf(consonants, ch) >= 0)
+                stats.ConsonantCount++;
+
+            if (char.IsLetter(ch))
+            {
+                if (!stats.LetterFrequency.ContainsKey(ch))
+                    stats.LetterFrequency[ch] = 0;
+                stats.LetterFrequency[ch]++;
+            }
+        }
+
+        return stats;
+    }
+
 }
