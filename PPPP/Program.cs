@@ -176,6 +176,16 @@ namespace LibraryApp
             Console.WriteLine("Самая дешёвая книга:\n" + min);
         }
 
+        static void GroupByAuthor()
+        {
+            var groups = books.GroupBy(b => b.Author)
+                              .Select(g => new { Автор = g.Key, Количество = g.Count() });
+
+            foreach (var group in groups)
+                Console.WriteLine($"{group.Автор}: {group.Количество} книг");
+        }
+
+
 
 
     }
