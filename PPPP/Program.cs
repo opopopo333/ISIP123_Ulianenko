@@ -161,6 +161,21 @@ namespace LibraryApp
             ShowResult(sorted);
         }
 
+        static void ShowPriceExtremes()
+        {
+            if (books.Count == 0)
+            {
+                Console.WriteLine("Список пуст.");
+                return;
+            }
+
+            var max = books.MaxBy(b => b.Price);
+            var min = books.MinBy(b => b.Price);
+
+            Console.WriteLine("Самая дорогая книга:\n" + max);
+            Console.WriteLine("Самая дешёвая книга:\n" + min);
+        }
+
 
 
     }
