@@ -47,5 +47,45 @@ namespace LibraryApp
         }
     }
 
+    class Program
+    {
+        static List<Book> books = new List<Book>();
 
+        static void Main()
+        {
+            SeedBooks();
+
+            while (true)
+            {
+                Console.WriteLine("\n=== Меню ===");
+                Console.WriteLine("1. Добавить книгу");
+                Console.WriteLine("2. Удалить книгу по ID");
+                Console.WriteLine("3. Найти книги");
+                Console.WriteLine("4. Отсортировать книги");
+                Console.WriteLine("5. Самая дорогая и самая дешёвая книга");
+                Console.WriteLine("6. Группировка по авторам");
+                Console.WriteLine("7. Показать все книги");
+                Console.WriteLine("0. Выход");
+                Console.Write("Выберите действие: ");
+
+                string choice = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (choice)
+                {
+                    case "1": AddBook(); break;
+                    case "2": RemoveBook(); break;
+                    case "3": SearchBooks(); break;
+                    case "4": SortBooks(); break;
+                    case "5": ShowPriceExtremes(); break;
+                    case "6": GroupByAuthor(); break;
+                    case "7": ShowAllBooks(); break;
+                    case "0": return;
+                    default: Console.WriteLine("Неверный ввод, попробуйте снова."); break;
+                }
+            }
+        }
+
+
+    }
 }
