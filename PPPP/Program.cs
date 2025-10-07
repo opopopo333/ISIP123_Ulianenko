@@ -41,5 +41,11 @@ namespace LibraryApp
             Year = year;
             Price = price;
         }
+        public override string ToString()
+        {
+            return $"ID: {Id} | Название: {Title} | Автор: {Author} | Жанр: {Genre} | Год: {Year} | Цена: {Price} руб.";
+        }
     }
+
+
 }
