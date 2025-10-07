@@ -131,6 +131,22 @@ namespace LibraryApp
             else Console.WriteLine("Некорректный ввод.");
         }
 
+        static void SearchBooks()
+        {
+            Console.WriteLine("1. По названию\n2. По автору\n3. По жанру");
+            string option = Console.ReadLine();
+
+            IEnumerable<Book> result = option switch
+            {
+                "1" => books.Where(b => b.Title.Contains(Request("название"), StringComparison.OrdinalIgnoreCase)),
+                "2" => books.Where(b => b.Author.Contains(Request("автора"), StringComparison.OrdinalIgnoreCase)),
+                "3" => books.Where(b => b.Genre.ToString().Equals(Request("жанр"), StringComparison.OrdinalIgnoreCase)),
+                _ => Enumerable.Empty<Book>()
+            };
+
+            ShowResult(result);
+        }
+
 
 
     }
