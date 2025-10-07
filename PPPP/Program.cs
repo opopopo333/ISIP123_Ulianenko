@@ -53,7 +53,6 @@ namespace LibraryApp
 
         static void Main()
         {
-            SeedBooks();
 
             while (true)
             {
@@ -85,6 +84,37 @@ namespace LibraryApp
                 }
             }
         }
+        static void AddBook()
+        {
+            try
+            {
+                Console.Write("Введите название: ");
+                string title = Console.ReadLine();
+
+                Console.Write("Введите автора: ");
+                string author = Console.ReadLine();
+
+                Console.WriteLine("Выберите жанр:");
+                foreach (var g in Enum.GetValues(typeof(Genre)))
+                    Console.WriteLine($"{(int)g}. {g}");
+                Genre genre = (Genre)Convert.ToInt32(Console.ReadLine());
+
+                Console.Write("Введите год издания: ");
+                int year = int.Parse(Console.ReadLine());
+
+                Console.Write("Введите цену: ");
+                decimal price = decimal.Parse(Console.ReadLine());
+
+                var book = new Book(title, author, genre, year, price);
+                books.Add(book);
+                Console.WriteLine("Книга успешно добавлена!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+
 
 
     }
