@@ -185,6 +185,25 @@ namespace LibraryApp
                 Console.WriteLine($"{group.Автор}: {group.Количество} книг");
         }
 
+        static void ShowResult(IEnumerable<Book> result)
+        {
+            if (!result.Any())
+                Console.WriteLine("Книги не найдены.");
+            else
+                foreach (var book in result) Console.WriteLine(book);
+        }
+
+        static void ShowAllBooks()
+        {
+            ShowResult(books);
+        }
+
+        static string Request(string param)
+        {
+            Console.Write($"Введите {param}: ");
+            return Console.ReadLine();
+        }
+
 
 
 
