@@ -146,6 +146,20 @@ namespace LibraryApp
 
             ShowResult(result);
         }
+        static void SortBooks()
+        {
+            Console.WriteLine("1. По названию\n2. По году");
+            string option = Console.ReadLine();
+
+            var sorted = option switch
+            {
+                "1" => books.OrderBy(b => b.Title).AsEnumerable(),
+                "2" => books.OrderBy(b => b.Year).AsEnumerable(),
+                _ => books.AsEnumerable()
+            };
+
+            ShowResult(sorted);
+        }
 
 
 
