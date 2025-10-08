@@ -53,7 +53,7 @@ namespace LibraryApp
 
         static void Main()
         {
-
+            SeedBooks();
             while (true)
             {
                 Console.WriteLine("\n=== Меню ===");
@@ -204,8 +204,13 @@ namespace LibraryApp
             return Console.ReadLine();
         }
 
-
-
-
+        static void SeedBooks()
+        {
+        books.Add(new Book("Властелин колец", "Толкин", Genre.Fantasy, 1954, 1200));
+        books.Add(new Book("Дюна", "Герберт", Genre.ScienceFiction, 1965, 900));
+        books.Add(new Book("Шерлок Холмс", "Дойл", Genre.Detective, 1892, 700));
+        books.Add(new Book("Анна Каренина", "Толстой", Genre.Romance, 1878, 600));
+        books.Add(new Book("История Рима", "Моммзен", Genre.History, 1854, 1100));
+        } 
     }
 }
