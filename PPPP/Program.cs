@@ -59,8 +59,8 @@ namespace UniversityManagement
 
     class Course
     {
-        public string Title { get; private set; }
-        public Teacher Instructor { get; private set; }
+        public string Title;
+        public Teacher Instructor;
         private List<Student> students = new List<Student>();
 
         public Course(string title, Teacher instructor)
