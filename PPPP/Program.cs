@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace UniversityManagement
 {
-    // Абстрактный класс — базовый для всех людей
+    // Абстрактный класс 
     abstract class Person
     {
         private string name;
