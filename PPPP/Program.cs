@@ -182,7 +182,7 @@ namespace UniversityManagement
 
             while (true)
             {
-                Console.WriteLine("\n-- Меню управления университетом ---");
+                Console.WriteLine("\n-- Меню управления университетом --");
                 Console.WriteLine("1. Добавить студента");
                 Console.WriteLine("2. Добавить преподавателя");
                 Console.WriteLine("3. Создать курс");
