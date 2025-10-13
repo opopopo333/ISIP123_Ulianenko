@@ -1,192 +1,212 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace DailyExpenses
+namespace UniversityManagement
 {
-    public class Expense
+    // Абстрактный класс — базовый для всех людей
+    abstract class Person
     {
-        public string Name { get; set; }
-        public double Amount { get; set; }
+        private string name;
+        private int age;
+        private string contactInfo;
 
-        public Expense(string name, double amount)
+        public string Name => name;
+        public int Age => age;
+        public string ContactInfo => contactInfo;
+
+        protected Person(string name, int age, string contactInfo)
         {
-            Name = name;
-            Amount = amount;
+            this.name = name;
+            this.age = age;
+            this.contactInfo = contactInfo;
         }
 
-        public override string ToString()
+        public abstract void ShowInfo();
+    }
+
+    class Student : Person
+    {
+        private List<Course> courses = new List<Course>();
+
+        public Student(string name, int age, string contact) : base(name, age, contact) { }
+
+        public void EnrollCourse(Course course)
         {
-            return $"{Name}; {Amount} рубле";
+            courses.Add(course);
+        }
+
+        public override void ShowInfo()
+        {
+            Console.WriteLine($"Студент: {Name}, Возраст: {Age}, Контакт: {ContactInfo}");
+            Console.WriteLine("Курсы:");
+            if (courses.Count == 0)
+                Console.WriteLine("  Нет записей на курсы.");
+            else
+                foreach (var c in courses)
+                    Console.WriteLine($"  - {c.Title}");
+        }
+    }
+
+    class Teacher : Person
+    {
+        public Teacher(string name, int age, string contact) : base(name, age, contact) { }
+
+        public override void ShowInfo()
+        {
+            Console.WriteLine($"Преподаватель: {Name}, Возраст: {Age}, Контакт: {ContactInfo}");
+        }
+    }
+
+    class Course
+    {
+        public string Title { get; private set; }
+        public Teacher Instructor { get; private set; }
+        private List<Student> students = new List<Student>();
+
+        public Course(string title, Teacher instructor)
+        {
+            Title = title;
+            Instructor = instructor;
+        }
+
+        public void AddStudent(Student student)
+        {
+            students.Add(student);
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Курс: {Title}, Преподаватель: {Instructor.Name}");
+            Console.WriteLine("Студенты:");
+            if (students.Count == 0)
+                Console.WriteLine("  Пока никто не записан.");
+            else
+                foreach (var s in students)
+                    Console.WriteLine($"  - {s.Name}");
+        }
+    }
+
+    class University
+    {
+        private List<Student> students = new List<Student>();
+        private List<Teacher> teachers = new List<Teacher>();
+        private List<Course> courses = new List<Course>();
+
+        public void AddStudent()
+        {
+            Console.Write("Имя студента: ");
+            string name = Console.ReadLine();
+            Console.Write("Возраст: ");
+            int age = int.Parse(Console.ReadLine());
+            Console.Write("Контакт: ");
+            string contact = Console.ReadLine();
+            students.Add(new Student(name, age, contact));
+        }
+
+        public void AddTeacher()
+        {
+            Console.Write("Имя преподавателя: ");
+            string name = Console.ReadLine();
+            Console.Write("Возраст: ");
+            int age = int.Parse(Console.ReadLine());
+            Console.Write("Контакт: ");
+            string contact = Console.ReadLine();
+            teachers.Add(new Teacher(name, age, contact));
+        }
+
+        public void AddCourse()
+        {
+            if (teachers.Count == 0)
+            {
+                Console.WriteLine("Нет преподавателей для назначения курса.");
+                return;
+            }
+
+            Console.Write("Название курса: ");
+            string title = Console.ReadLine();
+
+            Console.WriteLine("Выберите преподавателя:");
+            for (int i = 0; i < teachers.Count; i++)
+                Console.WriteLine($"{i + 1}. {teachers[i].Name}");
+
+            int choice = int.Parse(Console.ReadLine()) - 1;
+            courses.Add(new Course(title, teachers[choice]));
+        }
+
+        public void EnrollStudentInCourse()
+        {
+            if (students.Count == 0 || courses.Count == 0)
+            {
+                Console.WriteLine("Недостаточно данных (нужно добавить студентов и курсы).");
+                return;
+            }
+
+            Console.WriteLine("Выберите студента:");
+            for (int i = 0; i < students.Count; i++)
+                Console.WriteLine($"{i + 1}. {students[i].Name}");
+            int sIndex = int.Parse(Console.ReadLine()) - 1;
+
+            Console.WriteLine("Выберите курс:");
+            for (int i = 0; i < courses.Count; i++)
+                Console.WriteLine($"{i + 1}. {courses[i].Title}");
+            int cIndex = int.Parse(Console.ReadLine()) - 1;
+
+            students[sIndex].EnrollCourse(courses[cIndex]);
+            courses[cIndex].AddStudent(students[sIndex]);
+        }
+
+        public void ShowAllStudents()
+        {
+            foreach (var s in students)
+                s.ShowInfo();
+        }
+
+        public void ShowAllTeachers()
+        {
+            foreach (var t in teachers)
+                t.ShowInfo();
+        }
+
+        public void ShowAllCourses()
+        {
+            foreach (var c in courses)
+                c.ShowInfo();
         }
     }
 
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            List<Expense> expenses = new List<Expense>();
-            Console.WriteLine("Введите количество операций (от 2 до 40):");
-            int n;
-            while (!int.TryParse(Console.ReadLine(), out n) || n < 2 || n > 40)
-            {
-                Console.WriteLine("Неверное значение. Введите число от 2 до 40:");
-            }
-
-            Console.WriteLine("Введите траты по шаблону: (Название; Сумма)");
-            for (int i = 0; i < n; i++)
-            {
-                string line;
-                while (true)
-                {
-                    line = Console.ReadLine().Trim();
-                    if (line.StartsWith("(") && line.EndsWith(")"))
-                    {
-                        line = line.Substring(1, line.Length - 2).Trim();
-                        string[] parts = line.Split(';');
-                        if (parts.Length == 2)
-                        {
-                            string name = parts[0].Trim();
-                            if (double.TryParse(parts[1].Trim(), out double amount) && amount > 0)
-                            {
-                                expenses.Add(new Expense(name, amount));
-                                break;
-                            }
-                        }
-                    }
-                    Console.WriteLine("Неверный формат. Введите по шаблону: (Название; Сумма)");
-                }
-            }
+            University university = new University();
 
             while (true)
             {
-                Console.WriteLine("\nМеню:");
-                Console.WriteLine("1. Вывод данных");
-                Console.WriteLine("2. Статистика (среднее, максимальное, минимальное, сумма)");
-                Console.WriteLine("3. Сортировка по цене (пузырьковая сортировка)");
-                Console.WriteLine("4. Конвертация валюты");
-                Console.WriteLine("5. Поиск по названию");
+                Console.WriteLine("\n--- Меню управления университетом ---");
+                Console.WriteLine("1. Добавить студента");
+                Console.WriteLine("2. Добавить преподавателя");
+                Console.WriteLine("3. Создать курс");
+                Console.WriteLine("4. Записать студента на курс");
+                Console.WriteLine("5. Показать всех студентов");
+                Console.WriteLine("6. Показать всех преподавателей");
+                Console.WriteLine("7. Показать все курсы");
                 Console.WriteLine("0. Выход");
-                Console.Write("Выберите пункт: ");
+                Console.Write("Выбор: ");
+
                 string choice = Console.ReadLine();
+                Console.WriteLine();
 
                 switch (choice)
                 {
-                    case "1":
-                        Console.WriteLine("\nДанные:");
-                        foreach (var exp in expenses)
-                        {
-                            Console.WriteLine(exp);
-                        }
-                        break;
-                    case "2":
-                        if (expenses.Count > 0)
-                        {
-                            double sum = expenses.Sum(e => e.Amount);
-                            double avg = sum / expenses.Count;
-                            double max = expenses.Max(e => e.Amount);
-                            double min = expenses.Min(e => e.Amount);
-                            Console.WriteLine($"\nСтатистика:");
-                            Console.WriteLine($"Сумма: {sum} рубле");
-                            Console.WriteLine($"Среднее: {avg:F2} рубле");
-                            Console.WriteLine($"Максимум: {max} рубле");
-                            Console.WriteLine($"Минимум: {min} рубле");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Нет данных.");
-                        }
-                        break;
-                    case "3":
-                        BubbleSort(expenses);
-                        Console.WriteLine("\nДанные отсортированы по цене (по возрастанию):");
-                        foreach (var exp in expenses)
-                        {
-                            Console.WriteLine(exp);
-                        }
-                        break;
-                    case "4":
-                        Console.WriteLine("\nВыберите валюту для конвертации:");
-                        Console.WriteLine("1. доллар (курс: 90 рубле за 1 доллар)");
-                        Console.WriteLine("2. евро (курс: 100 рубле за 1 евро)");
-                        Console.WriteLine("3. Ввести свой курс");
-                        Console.Write("Выбор: ");
-                        string currChoice = Console.ReadLine();
-                        double rate = 1.0;
-                        string newCurrency = "";
-                        switch (currChoice)
-                        {
-                            case "1":
-                                rate = 90.0;
-                                newCurrency = "доллар";
-                                break;
-                            case "2":
-                                rate = 100.0;
-                                newCurrency = "евро";
-                                break;
-                            case "3":
-                                Console.Write("Введите курс: ");
-                                if (double.TryParse(Console.ReadLine(), out rate) && rate > 0)
-                                {
-                                    Console.Write("Введите название валюты: ");
-                                    newCurrency = Console.ReadLine().Trim();
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Неверный курс.");
-                                    continue;
-                                }
-                                break;
-                            default:
-                                Console.WriteLine("Неверный выбор.");
-                                continue;
-                        }
-                        Console.WriteLine($"\nКонвертированные данные в {newCurrency}:");
-                        foreach (var exp in expenses)
-                        {
-                            double converted = exp.Amount / rate;
-                            Console.WriteLine($"{exp.Name}; {converted:F2} {newCurrency}");
-                        }
-                        break;
-                    case "5":
-                        Console.Write("Введите название для поиска: ");
-                        string keyword = Console.ReadLine().Trim();
-                        var found = expenses.Where(e => e.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
-                        if (found.Count > 0)
-                        {
-                            Console.WriteLine("\nНайденные траты:");
-                            foreach (var exp in found)
-                            {
-                                Console.WriteLine(exp);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Ничего не найдено.");
-                        }
-                        break;
-                    case "0":
-                        return;
-                    default:
-                        Console.WriteLine("Неверный выбор.");
-                        break;
-                }
-            }
-        }
-
-        static void BubbleSort(List<Expense> list)
-        {
-            int n = list.Count;
-            for (int i = 0; i < n - 1; i++)
-            {
-                for (int j = 0; j < n - i - 1; j++)
-                {
-                    if (list[j].Amount > list[j + 1].Amount)
-                    {
-                        Expense temp = list[j];
-                        list[j] = list[j + 1];
-                        list[j + 1] = temp;
-                    }
+                    case "1": university.AddStudent(); break;
+                    case "2": university.AddTeacher(); break;
+                    case "3": university.AddCourse(); break;
+                    case "4": university.EnrollStudentInCourse(); break;
+                    case "5": university.ShowAllStudents(); break;
+                    case "6": university.ShowAllTeachers(); break;
+                    case "7": university.ShowAllCourses(); break;
+                    case "0": return;
+                    default: Console.WriteLine("Неверный выбор."); break;
                 }
             }
         }
