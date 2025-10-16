@@ -152,3 +152,37 @@ class Player
     public int Defense = 5;
     public bool Defending = false;
 }
+
+abstract class Enemy
+{
+    public string Name;
+    public int HP;
+    public int Attack;
+    public int Defense;
+
+    public virtual int AttackValue() => Math.Max(Attack - 5, 1); // базовый расчет урона
+
+    public static Enemy GenerateRandomEnemy()
+    {
+        int type = Program.rnd.Next(3);
+        return type switch
+        {
+            0 => new Goblin(),
+            1 => new Skeleton(),
+            2 => new Mage(),
+            _ => new Goblin(),
+        };
+    }
+
+    public static Enemy GenerateBoss()
+    {
+        int type = Program.rnd.Next(3);
+        return type switch
+        {
+            0 => new GoblinBoss(),
+            1 => new SkeletonBoss(),
+            2 => new MageBoss(),
+            _ => new GoblinBoss(),
+        };
+    }
+}
