@@ -186,3 +186,23 @@ abstract class Enemy
         };
     }
 }
+
+class Goblin : Enemy
+{
+    public int CritChance = 20;
+
+    public Goblin()
+    {
+        Name = "Гоблин";
+        HP = 30;
+        Attack = 10;
+        Defense = 3;
+    }
+
+    public override int AttackValue()
+    {
+        if (Program.rnd.Next(100) < CritChance)
+            return Attack * 2;
+        return Attack;
+    }
+}
