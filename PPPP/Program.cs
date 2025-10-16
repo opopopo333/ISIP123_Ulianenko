@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 
 class Program
 {
@@ -40,4 +41,80 @@ class Program
 
         Console.WriteLine("Игра окончена! Вы погибли.");
     }
+    static void Battle(Player player, Enemy enemy)
+    {
+        bool playerFrozen = false;
+
+        while (player.HP > 0 && enemy.HP > 0)
+        {
+            if (!playerFrozen)
+            {
+                Console.WriteLine($"\nВаш ход! HP: {player.HP}, Враг HP: {enemy.HP}");
+                Console.WriteLine("1. Атаковать  2. Защищаться");
+                string choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    int damage = Math.Max(player.Weapon - enemy.Defense, 0);
+                    enemy.HP -= damage;
+                    Console.WriteLine($"Вы нанесли {damage} урона!");
+                }
+                else
+                {
+                    player.Defending = true;
+                    Console.WriteLine("Вы готовитесь к защите!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Вы заморожены и пропускаете ход!");
+                playerFrozen = false;
+            }
+
+            if (enemy.HP <= 0) break;
+
+            // Ход врага
+            int enemyDamage = enemy.AttackValue();
+            bool blocked = false;
+
+            if (player.Defending)
+            {
+                if (rnd.Next(100) < 40)
+                {
+                    Console.WriteLine("Вы полностью уклонились от атаки!");
+                    blocked = true;
+                }
+                else
+                {
+                    double blockPercent = rnd.Next(70, 101) / 100.0;
+                    enemyDamage = (int)(enemyDamage * (1 - blockPercent));
+                    Console.WriteLine($"Вы блокировали {blockPercent * 100}% урона.");
+                }
+                player.Defending = false;
+            }
+
+            if (!blocked)
+            {
+                player.HP -= enemyDamage;
+                Console.WriteLine($"{enemy.Name} нанес вам {enemyDamage} урона!");
+            }
+
+            // Проверка особенностей врага
+            if (enemy is Goblin g && rnd.Next(100) < g.CritChance)
+            {
+                int critDamage = g.Attack;
+                player.HP -= critDamage;
+                Console.WriteLine($"Критический удар Гоблина! Вы получили {critDamage} урона!");
+            }
+            else if (enemy is Mage m && rnd.Next(100) < m.FreezeChance)
+            {
+                playerFrozen = true;
+                Console.WriteLine("Маг заморозил вас! Вы пропустите следующий ход!");
+            }
+        }
+
+        if (player.HP > 0)
+            Console.WriteLine($"Вы победили {enemy.Name}!");
+    }
+
 }
