@@ -218,3 +218,16 @@ class Skeleton : Enemy
 
     public override int AttackValue() => Attack; // игнорирует защиту игрока
 }
+
+class Mage : Enemy
+{
+    public int FreezeChance = 20;
+
+    public Mage()
+    {
+        Name = "Маг";
+        HP = 25;
+        Attack = 12;
+        Defense = 2;
+    }
+}
