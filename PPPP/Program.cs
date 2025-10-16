@@ -206,3 +206,15 @@ class Goblin : Enemy
         return Attack;
     }
 }
+class Skeleton : Enemy
+{
+    public Skeleton()
+    {
+        Name = "Скелет";
+        HP = 40;
+        Attack = 8;
+        Defense = 5;
+    }
+
+    public override int AttackValue() => Attack; // игнорирует защиту игрока
+}
