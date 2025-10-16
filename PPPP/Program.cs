@@ -117,4 +117,29 @@ class Program
             Console.WriteLine($"Вы победили {enemy.Name}!");
     }
 
+    static void Chest(Player player)
+    {
+        Console.WriteLine("Вы нашли сундук!");
+        int itemType = rnd.Next(3);
+
+        switch (itemType)
+        {
+            case 0: // зелье
+                player.HP = player.MaxHP;
+                Console.WriteLine("Вы нашли лечебное зелье! Полное восстановление здоровья.");
+                break;
+            case 1: // оружие
+                int newWeapon = rnd.Next(5, 16);
+                Console.WriteLine($"Вы нашли оружие с уроном {newWeapon}. Ваше текущее оружие {player.Weapon}.");
+                Console.WriteLine("1. Взять  2. Выбросить");
+                if (Console.ReadLine() == "1") player.Weapon = newWeapon;
+                break;
+            case 2: // доспехи
+                int newArmor = rnd.Next(3, 11);
+                Console.WriteLine($"Вы нашли доспехи с защитой {newArmor}. Ваша текущая защита {player.Defense}.");
+                Console.WriteLine("1. Взять  2. Выбросить");
+                if (Console.ReadLine() == "1") player.Defense = newArmor;
+                break;
+        }
+    }
 }
