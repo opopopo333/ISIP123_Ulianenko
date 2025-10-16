@@ -231,3 +231,38 @@ class Mage : Enemy
         Defense = 2;
     }
 }
+
+class GoblinBoss : Goblin
+{
+    public GoblinBoss()
+    {
+        Name = "ВВГ (Босс Гоблин)";
+        HP = (int)(HP * 2.0);
+        Attack = (int)(Attack * 1.5);
+        Defense = (int)(Defense * 1.2);
+        CritChance += 10;
+    }
+}
+
+class SkeletonBoss : Skeleton
+{
+    public SkeletonBoss()
+    {
+        Name = "Ковальский (Босс Скелет)";
+        HP = (int)(HP * 2.5);
+        Attack = (int)(Attack * 1.3);
+        Defense = (int)(Defense * 1.4);
+    }
+}
+
+class MageBoss : Mage
+{
+    public MageBoss()
+    {
+        Name = "Архимаг C++ (Босс Маг)";
+        HP = (int)(HP * 1.8);
+        Attack = (int)(Attack * 1.6);
+        Defense = (int)(Defense * 1.1);
+        FreezeChance += 10;
+    }
+}
