@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="359ec299486248a2bfe4a6218ef2fd6f" Name="Diagram1">
+        <EntityTypeShape EntityType="OSModel.Cars" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="OSModel.Clients" Width="1.5" PointX="1.5" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OSModel.Orders" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="OSModel.Parts" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="OSModel.Repairs" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="OSModel.FK__Cars__ClientId__60A75C0F" ManuallyRouted="false" />
+        <AssociationConnector Association="OSModel.FK__Repairs__CarId__6383C8BA" ManuallyRouted="false" />
+        <AssociationConnector Association="OSModel.FK__Orders__PartId__6754599E" ManuallyRouted="false" />
+        <AssociationConnector Association="OSModel.FK__Repairs__PartId__6477ECF3" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
