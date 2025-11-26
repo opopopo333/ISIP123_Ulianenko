@@ -25,7 +25,7 @@ namespace PR7
             Console.WriteLine("=== АВТОСЕРВИС — НАЧАЛО ИГРЫ ===");
             Console.WriteLine();
 
-            // Проверка, что база данных корректно загружена
+            //что бд корректно загружена
             if (!Core.Context.Parts.Any())
             {
                 Console.WriteLine("Ошибка: таблица Parts пустая.");
@@ -70,27 +70,52 @@ namespace PR7
         private void HandleClient()
         {
             Random rnd = new Random();
-            var part = Core.Context.Parts.OrderBy(x => rnd.Next()).First();
 
-            Console.WriteLine();
-            Console.WriteLine($"Клиент: сломалась деталь — {part.Name}");
-            Console.WriteLine($"Стоимость ремонта: {part.Price + 200} руб.");
-
-            var warehousePart = Core.Context.WarehouseParts
-                .FirstOrDefault(x => x.PartsID == part.ID);
-
-            if (warehousePart != null && warehousePart.Count > 0)
+            // Загружаем все детали в память
+            var parts = Core.Context.Parts.ToList();
+            if (parts.Count == 0)
             {
-                RepairCar(part, warehousePart);
+                Console.WriteLine("Нет деталей в базе.");
+                return;
+            }
+
+            // Выбираем случайную деталь
+            var brokenPart = parts[rnd.Next(parts.Count)];
+
+            decimal laborCost = 200; // пример оплаты работы
+            decimal totalPrice = brokenPart.Price + laborCost;
+
+            Console.WriteLine($"\nКлиент: сломалась деталь — {brokenPart.Name}");
+            Console.WriteLine($"Стоимость ремонта: {totalPrice} руб.");
+            Console.Write("Принять заказ? (y/n): ");
+            string input = Console.ReadLine()?.ToLower();
+
+            if (input != "y")
+            {
+                ApplyFine(totalPrice * 0.1m);
+                Console.WriteLine("Вы отказались от ремонта, штраф списан.");
+                return;
+            }
+
+            // Ищем деталь на складе
+            var whPart = Core.Context.WarehouseParts
+                .FirstOrDefault(x => x.PartsID == brokenPart.ID && x.Count > 0);
+
+            if (whPart != null)
+            {
+                whPart.Count--;
+                Core.Context.SaveChanges();
+
+                var warehouse = Core.Context.WareHouse.First();
+                warehouse.Balance += totalPrice;
+                Core.Context.SaveChanges();
+
+                Console.WriteLine($"Ремонт выполнен! +{totalPrice} руб.");
             }
             else
             {
-                Console.WriteLine("Детали нет на складе.");
-                Console.WriteLine("1 — отказать (-100 руб.)");
-                Console.WriteLine("0 — назад");
-
-                var ch = Console.ReadLine();
-                if (ch == "1") PayFine();
+                Console.WriteLine("Детали на складе нет. Клиент недоволен, списан штраф.");
+                ApplyFine(totalPrice * 1.5m);
             }
         }
 
@@ -195,5 +220,25 @@ namespace PR7
                 Console.WriteLine($"{p.Name} — {i.Count} шт.");
             }
         }
+
+        private void ApplyFine(decimal fineAmount)
+        {
+            // Получаем запись склада (в игре один склад)
+            var warehouse = Core.Context.WareHouse.First();
+
+            // Списываем штраф
+            warehouse.Balance -= fineAmount;
+            Core.Context.SaveChanges();
+
+            Console.WriteLine($"Списано штрафа: {fineAmount} руб.");
+
+            // Проверка на отрицательный баланс
+            if (warehouse.Balance < 0)
+            {
+                Console.WriteLine("Баланс отрицательный. Вы разорились. Игра окончена.");
+                Environment.Exit(0);
+            }
+        }
+
     }
 }
