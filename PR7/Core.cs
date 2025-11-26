@@ -9,6 +9,6 @@ namespace PR7
     public class Core
     {
         public static
-            OSEntities context = new OSEntities();
+            OSEntities Context = new OSEntities();
     }
 }
