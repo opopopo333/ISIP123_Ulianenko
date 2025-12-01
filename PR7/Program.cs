@@ -17,6 +17,14 @@ namespace PR7
 
     public class Game
     {
+        private List<PendingPurchase> pendingPurchases = new List<PendingPurchase>();
+
+        public class PendingPurchase
+        {
+            public int PartID;
+            public int Count;
+            public int ClientsToServe;
+        }
         private decimal Balance => Core.Context.WareHouse.First().Balance;
 
         public void Start()
@@ -117,6 +125,7 @@ namespace PR7
                 Console.WriteLine("Детали на складе нет. Клиент недоволен, списан штраф.");
                 ApplyFine(totalPrice * 1.5m);
             }
+            UpdatePendingPurchases();
         }
 
         private void RepairCar(Parts part, WarehouseParts whPart)
@@ -185,25 +194,14 @@ namespace PR7
 
         private void AddToStock(int partId, int count)
         {
-            var row = Core.Context.WarehouseParts.FirstOrDefault(x => x.PartsID == partId);
-
-            if (row == null)
+            pendingPurchases.Add(new PendingPurchase
             {
-                row = new WarehouseParts()
-                {
-                    WarehouseID = Core.Context.WareHouse.First().Id,
-                    PartsID = partId,
-                    Count = count
-                };
+                PartID = partId,
+                Count = count,
+                ClientsToServe = 2
+            });
 
-                Core.Context.WarehouseParts.Add(row);
-            }
-            else
-            {
-                row.Count += count;
-            }
-
-            Core.Context.SaveChanges();
+            Console.WriteLine($"Деталь будет добавлена на склад после обслуживания 2 клиентов.");
         }
 
         // --- Просмотр склада ---
@@ -237,6 +235,38 @@ namespace PR7
             {
                 Console.WriteLine("Баланс отрицательный. Вы разорились. Игра окончена.");
                 Environment.Exit(0);
+            }
+        }
+        private void UpdatePendingPurchases()
+        {
+            foreach (var p in pendingPurchases.ToList())
+            {
+                p.ClientsToServe--;
+
+                if (p.ClientsToServe <= 0)
+                {
+                    var row = Core.Context.WarehouseParts.FirstOrDefault(x => x.PartsID == p.PartID);
+
+                    if (row == null)
+                    {
+                        row = new WarehouseParts()
+                        {
+                            WarehouseID = Core.Context.WareHouse.First().Id,
+                            PartsID = p.PartID,
+                            Count = p.Count
+                        };
+                        Core.Context.WarehouseParts.Add(row);
+                    }
+                    else
+                    {
+                        row.Count += p.Count;
+                    }
+
+                    Core.Context.SaveChanges();
+                    pendingPurchases.Remove(p);
+
+                    Console.WriteLine($"Деталь добавлена на склад ({p.Count} шт.)");
+                }
             }
         }
 
