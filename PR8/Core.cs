@@ -8,6 +8,6 @@ namespace PR8
 {
     public class Core
     {
-        public static Rodionov8PRACEntities2 Context = new Rodionov8PRACEntities2();
+        public static PR8Entities Context = new PR8Entities();
     }
 }
