@@ -41,7 +41,7 @@ class Program
         Console.Clear();
         Console.WriteLine("===Регистрация===");
 
-        Console.Write("Введите никнейм: ");
+        Console.Write("Введите логин: ");
         string username = Console.ReadLine();
 
         //проверка, не занят ли ник
@@ -80,7 +80,7 @@ class Program
     {
         Console.Clear();
         Console.WriteLine("===Вход===");
-        Console.Write("Введите никнейм: ");
+        Console.Write("Введите логин: ");
         string username = Console.ReadLine();
         Console.Write("Введите пароль: ");
         string password = Console.ReadLine();
