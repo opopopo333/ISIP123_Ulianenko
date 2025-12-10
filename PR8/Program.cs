@@ -7,8 +7,8 @@ class Program
 {
     static void Main()
     {
-        Console.Title = "GMWOG Marketplace";
-        Console.WriteLine("Добро пожаловать в онлайн-маркетплейс GMWOG!");
+        Console.Title = "Marketplace";
+        Console.WriteLine("Добро пожаловать в онлайн-маркетплейс!");
         Console.WriteLine("1 - Войти");
         Console.WriteLine("2 - Зарегистрироваться");
         Console.WriteLine("3 - Смотреть товары (гость)");
